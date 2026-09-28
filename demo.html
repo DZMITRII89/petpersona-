@@ -321,6 +321,8 @@
           <button type="button" class="swatch" data-color="amber" style="background:#d99a3d" title="Янтарный"></button>
           <button type="button" class="swatch" data-color="indigo" style="background:#6c6bb0" title="Индиго"></button>
           <button type="button" class="swatch" data-color="forest" style="background:#5f8a5a" title="Зелёный"></button>
+          <button type="button" class="swatch" data-color="graphite" style="background:#5c6470" title="Графит"></button>
+          <button type="button" class="swatch" data-color="navy" style="background:#3d5a73" title="Тёмно-синий"></button>
         </div>
       </div>
 
@@ -331,6 +333,8 @@
           <button type="button" class="pattern-swatch" data-pattern="cat" title="Кошачьи лапки"></button>
           <button type="button" class="pattern-swatch" data-pattern="dog" title="Собачьи лапки"></button>
           <button type="button" class="pattern-swatch" data-pattern="hearts" title="Сердечки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="stars" title="Звёзды"></button>
+          <button type="button" class="pattern-swatch" data-pattern="bones" title="Косточки"></button>
           <button type="button" class="pattern-swatch" data-pattern="none" style="background:#fff" title="Без узора"></button>
         </div>
       </div>
@@ -342,6 +346,8 @@
           <option value="classic">Классика (с засечками)</option>
           <option value="playful">Игривый</option>
           <option value="modern">Современный</option>
+          <option value="bold">Строгий гротеск</option>
+          <option value="handwritten">Рукописный</option>
         </select>
       </div>
     </section>
@@ -427,13 +433,17 @@
     { key: 'teal', accent: '#4a9d95', light: '#7cc2bb' },
     { key: 'amber', accent: '#d99a3d', light: '#eab868' },
     { key: 'indigo', accent: '#6c6bb0', light: '#9695ce' },
-    { key: 'forest', accent: '#5f8a5a', light: '#8bb586' }
+    { key: 'forest', accent: '#5f8a5a', light: '#8bb586' },
+    { key: 'graphite', accent: '#5c6470', light: '#8b929c' },
+    { key: 'navy', accent: '#3d5a73', light: '#6d8aa0' }
   ];
 
   const THEME_FONTS = [
     { key: 'classic', heading: 'Georgia, "Palatino Linotype", "Book Antiqua", serif', body: 'inherit' },
     { key: 'playful', heading: '"Comic Sans MS", "Segoe Print", cursive', body: '"Comic Sans MS", "Segoe Print", cursive' },
-    { key: 'modern', heading: '"Trebuchet MS", Verdana, sans-serif', body: '"Trebuchet MS", Verdana, sans-serif' }
+    { key: 'modern', heading: '"Trebuchet MS", Verdana, sans-serif', body: '"Trebuchet MS", Verdana, sans-serif' },
+    { key: 'bold', heading: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif', body: '"Arial Narrow", Arial, sans-serif' },
+    { key: 'handwritten', heading: '"Brush Script MT", "Segoe Script", cursive', body: '"Segoe Print", "Comic Sans MS", cursive' }
   ];
 
   const AUTO_BY_SPECIES = {
@@ -449,7 +459,12 @@
       'Требует открыть дверь, даже если она уже открыта',
       'Устраивает «динамическую смену интерьера» по ночам',
       'Смотрит в одну точку и этим пугает всех вокруг',
-      'Садится ровно на клавиатуру, когда нужно работать'
+      'Садится ровно на клавиатуру, когда нужно работать',
+      'Приносит в зубах предметы, которые никто не просил',
+      'Считает коробку любого размера своим законным домом',
+      'Будит в 5 утра, потому что миска опустела на треть',
+      'Обожает наблюдать за птицами через окно часами',
+      'Игнорирует новую игрушку, но обожает обёртку от неё'
     ],
     'собака': [
       'Гоняется за собственным хвостом по расписанию',
@@ -457,7 +472,11 @@
       'Может спать в любой позе, кроме удобной для хозяина',
       'Обожает воровать носки и прятать их под диваном',
       'Устраивает «салют» из шерсти два раза в год',
-      'Уверен, что каждый мяч на улице принадлежит ему'
+      'Уверен, что каждый мяч на улице принадлежит ему',
+      'Встречает у двери так, будто не виделись год',
+      'Точно знает время прогулки лучше любых часов',
+      'Разговаривает с каждой собакой на видео в телефоне',
+      'Уверенно охраняет дом от проезжающих машин'
     ],
     'другое': [
       'Узнаёт звук холодильника из трёх комнат',
@@ -465,7 +484,11 @@
       'Считает будильник личным врагом',
       'Готов часами наблюдать за окном',
       'Требует внимания ровно тогда, когда ты занят',
-      'Устраивает истерику по расписанию, известному только ему'
+      'Устраивает истерику по расписанию, известному только ему',
+      'Обожает всё новое ровно один день, а потом игнорирует',
+      'Устраивает генеральную уборку своей территории по-своему',
+      'Изобретает себе занятие из любого случайного предмета',
+      'Делает вид, что спит, но на самом деле всё слышит'
     ]
   };
 
@@ -478,6 +501,10 @@
       inner = `<g transform='translate(55,55) rotate(-12)' fill='${color}'><ellipse cx='0' cy='14' rx='16' ry='10'/><ellipse cx='-16' cy='-6' rx='7' ry='9'/><ellipse cx='-6' cy='-17' rx='7' ry='9'/><ellipse cx='6' cy='-17' rx='7' ry='9'/><ellipse cx='16' cy='-6' rx='7' ry='9'/></g>`;
     } else if (shape === 'hearts') {
       inner = `<g transform='translate(55,55)' fill='${color}'><path d='M0,-6 C-10,-18 -26,-6 0,14 C26,-6 10,-18 0,-6 Z'/></g>`;
+    } else if (shape === 'stars') {
+      inner = `<g transform='translate(55,55) rotate(10)' fill='${color}'><path d='M0,-20 L5,-5 L20,0 L5,5 L0,20 L-5,5 L-20,0 L-5,-5 Z'/></g>`;
+    } else if (shape === 'bones') {
+      inner = `<g transform='translate(55,55) rotate(-20)' fill='${color}'><rect x='-20' y='-4' width='40' height='8' rx='4'/><circle cx='-20' cy='-6' r='6'/><circle cx='-20' cy='6' r='6'/><circle cx='20' cy='-6' r='6'/><circle cx='20' cy='6' r='6'/></g>`;
     }
     return `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'>${inner}</svg>")`;
   }
