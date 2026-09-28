@@ -20,12 +20,13 @@
   body {
     margin: 0;
     font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
-    background: var(--paper);
+    background-color: var(--paper);
+    background-repeat: repeat;
     color: var(--ink);
     min-height: 100vh;
   }
 
-  h1, h2, .card-name {
+  h1, h2 {
     font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
     color: var(--ink);
   }
@@ -65,6 +66,55 @@
     background: var(--paper-alt);
     border-radius: 16px;
     padding: 28px;
+  }
+
+  .style-panel { margin-bottom: 20px; }
+
+  .style-group { margin-bottom: 18px; }
+  .style-group:last-child { margin-bottom: 0; }
+
+  .swatch-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .swatch, .pattern-swatch {
+    border: 3px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+
+  .swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1rem;
+  }
+
+  .pattern-swatch {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    background-color: #e9e6e6;
+    background-size: 28px 28px;
+    font-size: 1.3rem;
+  }
+
+  .swatch.selected, .pattern-swatch.selected {
+    border-color: var(--ink);
+  }
+
+  .swatch-auto {
+    background: conic-gradient(from 180deg, #c9738a, #4a9d95, #d99a3d, #6c6bb0, #5f8a5a, #c9738a);
+  }
+
+  .pattern-swatch-auto {
+    background: linear-gradient(135deg, #c9738a, #4a9d95);
   }
 
   label {
@@ -107,6 +157,12 @@
     font-size: 1.2rem;
     cursor: pointer;
     padding: 4px 8px;
+  }
+
+  .link-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
   }
 
   .link-btn {
@@ -175,7 +231,10 @@
     font-size: 3rem;
   }
 
-  .card-body { padding: 24px 28px 28px; }
+  .card-body {
+    padding: 24px 28px 28px;
+    font-family: var(--card-body-font, inherit);
+  }
 
   .card-eyebrow {
     text-transform: uppercase;
@@ -187,6 +246,8 @@
   }
 
   .card-name {
+    font-family: var(--card-heading-font, Georgia, "Palatino Linotype", "Book Antiqua", serif);
+    color: var(--ink);
     font-size: 1.8rem;
     margin: 0 0 6px;
   }
@@ -229,6 +290,16 @@
     .actions { flex-direction: column; }
     .actions button { width: 100%; }
   }
+
+  @media print {
+    .back-link, header.top, #form-section, #style-section, .actions {
+      display: none !important;
+    }
+    body { background: #fff !important; }
+    .wrap { padding: 0; max-width: 100%; }
+    #result { display: block !important; }
+    .card { box-shadow: none; max-width: 420px; margin: 20px auto; }
+  }
 </style>
 </head>
 <body>
@@ -239,6 +310,41 @@
       <h1>PetPersona</h1>
       <p>Заполни анкету о своём питомце — получишь готовую карточку-персону, которую можно скачать и показать всем.</p>
     </header>
+
+    <section id="style-section" class="panel style-panel">
+      <div class="style-group">
+        <label>Цвет акцента</label>
+        <div class="swatch-row" id="color-swatches">
+          <button type="button" class="swatch swatch-auto selected" data-color="auto" title="На вкус самого умного ИИ-агента">✨</button>
+          <button type="button" class="swatch" data-color="rose" style="background:#c9738a" title="Розовый"></button>
+          <button type="button" class="swatch" data-color="teal" style="background:#4a9d95" title="Бирюзовый"></button>
+          <button type="button" class="swatch" data-color="amber" style="background:#d99a3d" title="Янтарный"></button>
+          <button type="button" class="swatch" data-color="indigo" style="background:#6c6bb0" title="Индиго"></button>
+          <button type="button" class="swatch" data-color="forest" style="background:#5f8a5a" title="Зелёный"></button>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <label>Фон карточки</label>
+        <div class="swatch-row" id="pattern-swatches">
+          <button type="button" class="pattern-swatch pattern-swatch-auto selected" data-pattern="auto" title="На вкус самого умного ИИ-агента">✨</button>
+          <button type="button" class="pattern-swatch" data-pattern="cat" title="Кошачьи лапки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="dog" title="Собачьи лапки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="hearts" title="Сердечки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="none" style="background:#fff" title="Без узора"></button>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <label for="font-select">Шрифт</label>
+        <select id="font-select">
+          <option value="auto" selected>На вкус самого умного ИИ-агента</option>
+          <option value="classic">Классика (с засечками)</option>
+          <option value="playful">Игривый</option>
+          <option value="modern">Современный</option>
+        </select>
+      </div>
+    </section>
 
     <section id="form-section" class="panel">
       <form id="pet-form">
@@ -270,7 +376,10 @@
             <input type="text" class="fact-input" maxlength="140" placeholder="Ещё один факт">
           </div>
         </div>
-        <button type="button" id="add-fact" class="link-btn">+ добавить факт</button>
+        <div class="link-row">
+          <button type="button" id="add-fact" class="link-btn">+ добавить факт</button>
+          <button type="button" id="suggest-fact" class="link-btn">💡 Подскажи факт</button>
+        </div>
 
         <label for="pet-photo">Фото питомца</label>
         <input type="file" id="pet-photo" accept="image/*">
@@ -285,6 +394,8 @@
       <div class="card" id="card-preview"></div>
       <div class="actions">
         <button type="button" id="download-btn" class="primary">Скачать как HTML</button>
+        <button type="button" id="share-btn" class="secondary">Поделиться</button>
+        <button type="button" id="print-btn" class="secondary">Распечатать</button>
         <button type="button" id="edit-btn" class="secondary">Изменить анкету</button>
       </div>
     </section>
@@ -294,15 +405,123 @@
   const MAX_FACTS = 4;
   const factsList = document.getElementById('facts-list');
   const addFactBtn = document.getElementById('add-fact');
+  const suggestFactBtn = document.getElementById('suggest-fact');
   const form = document.getElementById('pet-form');
+  const styleSection = document.getElementById('style-section');
   const formSection = document.getElementById('form-section');
   const resultSection = document.getElementById('result');
   const cardPreview = document.getElementById('card-preview');
   const downloadBtn = document.getElementById('download-btn');
+  const shareBtn = document.getElementById('share-btn');
+  const printBtn = document.getElementById('print-btn');
   const editBtn = document.getElementById('edit-btn');
   const photoInput = document.getElementById('pet-photo');
+  const fontSelect = document.getElementById('font-select');
 
   let photoDataUrl = null;
+  let selectedColor = 'auto';
+  let selectedPattern = 'auto';
+
+  const THEME_COLORS = [
+    { key: 'rose', accent: '#c9738a', light: '#e3a6b6' },
+    { key: 'teal', accent: '#4a9d95', light: '#7cc2bb' },
+    { key: 'amber', accent: '#d99a3d', light: '#eab868' },
+    { key: 'indigo', accent: '#6c6bb0', light: '#9695ce' },
+    { key: 'forest', accent: '#5f8a5a', light: '#8bb586' }
+  ];
+
+  const THEME_FONTS = [
+    { key: 'classic', heading: 'Georgia, "Palatino Linotype", "Book Antiqua", serif', body: 'inherit' },
+    { key: 'playful', heading: '"Comic Sans MS", "Segoe Print", cursive', body: '"Comic Sans MS", "Segoe Print", cursive' },
+    { key: 'modern', heading: '"Trebuchet MS", Verdana, sans-serif', body: '"Trebuchet MS", Verdana, sans-serif' }
+  ];
+
+  const AUTO_BY_SPECIES = {
+    'кот': { color: 'rose', font: 'classic', pattern: 'cat' },
+    'собака': { color: 'amber', font: 'playful', pattern: 'dog' },
+    'другое': { color: 'teal', font: 'modern', pattern: 'hearts' }
+  };
+
+  const FACT_SUGGESTIONS = {
+    'кот': [
+      'Пьёт исключительно из-под крана — вода в миске невкусная',
+      'Спит по 18 часов в сутки и считает это подвигом',
+      'Требует открыть дверь, даже если она уже открыта',
+      'Устраивает «динамическую смену интерьера» по ночам',
+      'Смотрит в одну точку и этим пугает всех вокруг',
+      'Садится ровно на клавиатуру, когда нужно работать'
+    ],
+    'собака': [
+      'Гоняется за собственным хвостом по расписанию',
+      'Считает почтальона личным врагом',
+      'Может спать в любой позе, кроме удобной для хозяина',
+      'Обожает воровать носки и прятать их под диваном',
+      'Устраивает «салют» из шерсти два раза в год',
+      'Уверен, что каждый мяч на улице принадлежит ему'
+    ],
+    'другое': [
+      'Узнаёт звук холодильника из трёх комнат',
+      'Обожает исследовать новые коробки',
+      'Считает будильник личным врагом',
+      'Готов часами наблюдать за окном',
+      'Требует внимания ровно тогда, когда ты занят',
+      'Устраивает истерику по расписанию, известному только ему'
+    ]
+  };
+
+  function pawPatternDataUri(shape, color) {
+    if (shape === 'none') return null;
+    let inner = '';
+    if (shape === 'cat') {
+      inner = `<g transform='translate(55,55) rotate(18)' fill='${color}'><ellipse cx='0' cy='11' rx='14' ry='11'/><circle cx='-15' cy='-9' r='6.5'/><circle cx='-5' cy='-18' r='6.5'/><circle cx='5' cy='-18' r='6.5'/><circle cx='15' cy='-9' r='6.5'/></g>`;
+    } else if (shape === 'dog') {
+      inner = `<g transform='translate(55,55) rotate(-12)' fill='${color}'><ellipse cx='0' cy='14' rx='16' ry='10'/><ellipse cx='-16' cy='-6' rx='7' ry='9'/><ellipse cx='-6' cy='-17' rx='7' ry='9'/><ellipse cx='6' cy='-17' rx='7' ry='9'/><ellipse cx='16' cy='-6' rx='7' ry='9'/></g>`;
+    } else if (shape === 'hearts') {
+      inner = `<g transform='translate(55,55)' fill='${color}'><path d='M0,-6 C-10,-18 -26,-6 0,14 C26,-6 10,-18 0,-6 Z'/></g>`;
+    }
+    return `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'>${inner}</svg>")`;
+  }
+
+  document.querySelectorAll('.pattern-swatch[data-pattern]').forEach((btn) => {
+    const shape = btn.dataset.pattern;
+    if (shape !== 'auto' && shape !== 'none') {
+      const uri = pawPatternDataUri(shape, 'rgba(42,38,50,0.45)');
+      btn.style.backgroundImage = uri;
+      btn.style.backgroundRepeat = 'repeat';
+    }
+  });
+
+  document.getElementById('color-swatches').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-color]');
+    if (!btn) return;
+    selectedColor = btn.dataset.color;
+    document.querySelectorAll('#color-swatches .swatch').forEach((b) => b.classList.toggle('selected', b === btn));
+  });
+
+  document.getElementById('pattern-swatches').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-pattern]');
+    if (!btn) return;
+    selectedPattern = btn.dataset.pattern;
+    document.querySelectorAll('#pattern-swatches .pattern-swatch').forEach((b) => b.classList.toggle('selected', b === btn));
+  });
+
+  function resolveTheme(speciesValue) {
+    const auto = AUTO_BY_SPECIES[speciesValue] || AUTO_BY_SPECIES['другое'];
+    const colorKey = selectedColor === 'auto' ? auto.color : selectedColor;
+    const patternKey = selectedPattern === 'auto' ? auto.pattern : selectedPattern;
+    const fontKey = fontSelect.value === 'auto' ? auto.font : fontSelect.value;
+
+    const color = THEME_COLORS.find((c) => c.key === colorKey) || THEME_COLORS[0];
+    const font = THEME_FONTS.find((f) => f.key === fontKey) || THEME_FONTS[0];
+
+    return {
+      accent: color.accent,
+      accentLight: color.light,
+      headingFont: font.heading,
+      bodyFont: font.body,
+      patternCss: pawPatternDataUri(patternKey, 'rgba(42,38,50,0.05)')
+    };
+  }
 
   function addFactRow() {
     if (factsList.querySelectorAll('.fact-row').length >= MAX_FACTS) return;
@@ -312,12 +531,31 @@
       '<button type="button" title="Удалить">×</button>';
     row.querySelector('button').addEventListener('click', () => row.remove());
     factsList.appendChild(row);
-    if (factsList.querySelectorAll('.fact-row').length >= MAX_FACTS) {
-      addFactBtn.style.display = 'none';
-    }
   }
 
   addFactBtn.addEventListener('click', addFactRow);
+
+  suggestFactBtn.addEventListener('click', () => {
+    const species = document.getElementById('pet-species').value;
+    const bank = FACT_SUGGESTIONS[species] || FACT_SUGGESTIONS['другое'];
+    let inputs = Array.from(document.querySelectorAll('.fact-input'));
+    const used = new Set(inputs.map((i) => i.value.trim()).filter(Boolean));
+    const available = bank.filter((f) => !used.has(f));
+    const pool = available.length ? available : bank;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+
+    let target = inputs.find((i) => !i.value.trim());
+    if (!target) {
+      if (inputs.length < MAX_FACTS) {
+        addFactRow();
+        inputs = Array.from(document.querySelectorAll('.fact-input'));
+        target = inputs[inputs.length - 1];
+      } else {
+        target = inputs[inputs.length - 1];
+      }
+    }
+    target.value = pick;
+  });
 
   photoInput.addEventListener('change', () => {
     const file = photoInput.files[0];
@@ -379,20 +617,34 @@
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = collectData();
+    const theme = resolveTheme(document.getElementById('pet-species').value);
+
     cardPreview.innerHTML = buildCardHtml(data);
+    cardPreview.style.setProperty('--accent', theme.accent);
+    cardPreview.style.setProperty('--accent-light', theme.accentLight);
+    cardPreview.style.setProperty('--card-heading-font', theme.headingFont);
+    cardPreview.style.setProperty('--card-body-font', theme.bodyFont);
+
+    document.body.style.backgroundImage = theme.patternCss || 'none';
+
+    styleSection.style.display = 'none';
     formSection.style.display = 'none';
     resultSection.style.display = 'block';
   });
 
   editBtn.addEventListener('click', () => {
     resultSection.style.display = 'none';
+    styleSection.style.display = 'block';
     formSection.style.display = 'block';
   });
 
-  downloadBtn.addEventListener('click', () => {
+  function buildStandaloneHtml(name) {
     const styles = document.querySelector('style').outerHTML;
-    const name = document.getElementById('pet-name').value.trim() || 'Питомец';
-    const html = `<!DOCTYPE html>
+    const bg = document.body.style.backgroundImage;
+    const bodyStyle = (bg && bg !== 'none')
+      ? ` style="background-image:${bg.replace(/"/g, '&quot;')}; background-repeat:repeat;"`
+      : '';
+    return `<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -400,13 +652,17 @@
 <title>${escapeHtml(name)} — карточка питомца</title>
 ${styles}
 </head>
-<body>
+<body${bodyStyle}>
   <div class="wrap">
-    <div class="card">${cardPreview.innerHTML}</div>
+    ${cardPreview.outerHTML}
   </div>
 </body>
 </html>`;
+  }
 
+  downloadBtn.addEventListener('click', () => {
+    const name = document.getElementById('pet-name').value.trim() || 'Питомец';
+    const html = buildStandaloneHtml(name);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -417,6 +673,29 @@ ${styles}
     a.remove();
     URL.revokeObjectURL(url);
   });
+
+  shareBtn.addEventListener('click', async () => {
+    const name = document.getElementById('pet-name').value.trim() || 'Питомец';
+    const html = buildStandaloneHtml(name);
+    const filename = name.replace(/[^a-zA-Zа-яА-ЯёЁ0-9]+/g, '_') + '_persona.html';
+
+    try {
+      const file = new File([html], filename, { type: 'text/html' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file], title: `Карточка: ${name}`, text: 'Смотри, какая карточка получилась в PetPersona!' });
+        return;
+      }
+      if (navigator.share) {
+        await navigator.share({ title: `Карточка: ${name}`, text: 'Я создал карточку своего питомца в PetPersona!' });
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+    }
+    alert('Твой браузер не поддерживает системный шеринг. Используй кнопку «Скачать как HTML» и отправь файл вручную.');
+  });
+
+  printBtn.addEventListener('click', () => window.print());
 </script>
 </body>
 </html>
