@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetPersona — карточка-персона для твоего питомца</title>
+<style>
+  :root {
+    --accent: #c9738a;
+    --accent-light: #e3a6b6;
+    --ink: #2a2632;
+    --ink-soft: #55505f;
+    --paper: #cfcbcb;
+    --paper-alt: #c2bcbd;
+    --card-bg: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  h1, h2, h3 {
+    font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+    color: var(--ink);
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 20px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .hero h1 {
+    font-size: 2.4rem;
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+
+  .hero p.lead {
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 14px 34px;
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .cta:hover { background: var(--accent-light); }
+
+  section.block {
+    margin-bottom: 40px;
+  }
+
+  section.block h2 {
+    font-size: 1.4rem;
+    margin: 0 0 16px;
+  }
+
+  .steps {
+    display: grid;
+    gap: 16px;
+  }
+
+  .step {
+    background: var(--paper-alt);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .step .num {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .highlights {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .highlight-card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 20px rgba(42, 38, 50, 0.08);
+  }
+
+  .highlight-card .mark {
+    font-size: 1.4rem;
+  }
+
+  .highlight-card p {
+    margin: 8px 0 0;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    font-size: 0.95rem;
+  }
+
+  footer.finale {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid var(--paper-alt);
+  }
+
+  footer.finale p {
+    color: var(--ink-soft);
+    margin: 0 0 20px;
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 40px 16px 60px; }
+    .hero h1 { font-size: 1.9rem; }
+    .highlights { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <p class="eyebrow">PetPersona</p>
+      <h1>У каждого питомца — свой характер. Пусть об этом узнают все.</h1>
+      <p class="lead">
+        Заполни короткую анкету о своей кошке, собаке или любом другом питомце —
+        и через минуту получишь готовую забавную «карточку-персону» с фото,
+        прозвищами и фактами, которую можно скачать и отправить друзьям.
+      </p>
+      <a class="cta" href="demo.html">Попробовать демо →</a>
+    </header>
+
+    <section class="block">
+      <h2>Как это работает</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="num">1</span>
+          <p>Открываешь демо и заполняешь анкету: имя, вид, порода, прозвища, характер и пара забавных фактов.</p>
+        </div>
+        <div class="step">
+          <span class="num">2</span>
+          <p>Добавляешь фото — и мгновенно получаешь готовую карточку в едином стиле.</p>
+        </div>
+        <div class="step">
+          <span class="num">3</span>
+          <p>Скачиваешь карточку одним файлом и делишься ей где угодно — без регистрации и без серверов.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Почему это удобно</h2>
+      <div class="highlights">
+        <div class="highlight-card">
+          <span class="mark">🔒</span>
+          <p>Все данные и фото остаются в браузере — ничего не уходит на сервер.</p>
+        </div>
+        <div class="highlight-card">
+          <span class="mark">⚡</span>
+          <p>Результат готов сразу, без ожидания и регистрации.</p>
+        </div>
+        <div class="highlight-card">
+          <span class="mark">🐾</span>
+          <p>Подходит для любого питомца — кота, собаки или кого угодно ещё.</p>
+        </div>
+        <div class="highlight-card">
+          <span class="mark">📄</span>
+          <p>Карточка — обычный HTML-файл, который можно переслать или выложить куда угодно.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="finale">
+      <p>Готов создать карточку своего питомца?</p>
+      <a class="cta" href="demo.html">Попробовать демо →</a>
+    </footer>
+  </div>
+</body>
+</html>

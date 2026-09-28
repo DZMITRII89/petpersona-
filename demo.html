@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetPersona — демо: карточка твоего питомца</title>
+<style>
+  :root {
+    --accent: #c9738a;
+    --accent-light: #e3a6b6;
+    --ink: #2a2632;
+    --ink-soft: #55505f;
+    --paper: #cfcbcb;
+    --paper-alt: #c2bcbd;
+    --card-bg: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  h1, h2, .card-name {
+    font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+    color: var(--ink);
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+
+  .back-link:hover { color: var(--accent); }
+
+  header.top {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  header.top h1 {
+    font-size: 2rem;
+    margin: 0 0 8px;
+  }
+
+  header.top p {
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .panel {
+    background: var(--paper-alt);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  label {
+    display: block;
+    font-weight: 600;
+    margin: 18px 0 6px;
+  }
+
+  label:first-of-type { margin-top: 0; }
+
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--ink-soft);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    color: var(--ink);
+  }
+
+  textarea { resize: vertical; min-height: 60px; }
+
+  .fact-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    align-items: center;
+  }
+
+  .fact-row input { flex: 1; min-width: 0; }
+
+  .fact-row button {
+    flex: none;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 0;
+    font-size: 0.95rem;
+  }
+
+  .actions {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  button.primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--ink-soft);
+    border-radius: 999px;
+    padding: 12px 28px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  #result { display: none; }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(42, 38, 50, 0.15);
+  }
+
+  .card-photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--paper-alt);
+    display: block;
+  }
+
+  .card-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--paper-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    font-size: 3rem;
+  }
+
+  .card-body { padding: 24px 28px 28px; }
+
+  .card-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  .card-name {
+    font-size: 1.8rem;
+    margin: 0 0 6px;
+  }
+
+  .card-nicknames {
+    color: var(--ink-soft);
+    font-style: italic;
+    margin: 0 0 14px;
+  }
+
+  .card-personality {
+    margin: 0 0 20px;
+    line-height: 1.5;
+  }
+
+  .card-facts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+
+  .card-facts li {
+    background: var(--paper);
+    border-radius: 10px;
+    padding: 12px 14px;
+    line-height: 1.4;
+  }
+
+  .card-facts li::before {
+    content: "🐾 ";
+  }
+
+  @media (max-width: 420px) {
+    .wrap { padding: 16px 14px 60px; }
+    .panel { padding: 20px 16px; }
+    header.top h1 { font-size: 1.6rem; }
+    .card-body { padding: 18px 18px 22px; }
+    .actions { flex-direction: column; }
+    .actions button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back-link" href="index.html">← на главную</a>
+
+    <header class="top">
+      <h1>PetPersona</h1>
+      <p>Заполни анкету о своём питомце — получишь готовую карточку-персону, которую можно скачать и показать всем.</p>
+    </header>
+
+    <section id="form-section" class="panel">
+      <form id="pet-form">
+        <label for="pet-name">Имя питомца *</label>
+        <input type="text" id="pet-name" required maxlength="60">
+
+        <label for="pet-species">Вид животного</label>
+        <select id="pet-species">
+          <option value="кот">Кот / кошка</option>
+          <option value="собака">Собака</option>
+          <option value="другое">Другое</option>
+        </select>
+
+        <label for="pet-breed">Порода</label>
+        <input type="text" id="pet-breed" maxlength="80">
+
+        <label for="pet-nicknames">Прозвища (через запятую)</label>
+        <input type="text" id="pet-nicknames" maxlength="120">
+
+        <label for="pet-personality">Характер</label>
+        <textarea id="pet-personality" maxlength="300" placeholder="Пара фраз о характере"></textarea>
+
+        <label>Факты о питомце</label>
+        <div id="facts-list">
+          <div class="fact-row">
+            <input type="text" class="fact-input" maxlength="140" placeholder="Например: любит пить воду из-под крана">
+          </div>
+          <div class="fact-row">
+            <input type="text" class="fact-input" maxlength="140" placeholder="Ещё один факт">
+          </div>
+        </div>
+        <button type="button" id="add-fact" class="link-btn">+ добавить факт</button>
+
+        <label for="pet-photo">Фото питомца</label>
+        <input type="file" id="pet-photo" accept="image/*">
+
+        <div class="actions">
+          <button type="submit" class="primary">Создать карточку</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="result">
+      <div class="card" id="card-preview"></div>
+      <div class="actions">
+        <button type="button" id="download-btn" class="primary">Скачать как HTML</button>
+        <button type="button" id="edit-btn" class="secondary">Изменить анкету</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+  const MAX_FACTS = 4;
+  const factsList = document.getElementById('facts-list');
+  const addFactBtn = document.getElementById('add-fact');
+  const form = document.getElementById('pet-form');
+  const formSection = document.getElementById('form-section');
+  const resultSection = document.getElementById('result');
+  const cardPreview = document.getElementById('card-preview');
+  const downloadBtn = document.getElementById('download-btn');
+  const editBtn = document.getElementById('edit-btn');
+  const photoInput = document.getElementById('pet-photo');
+
+  let photoDataUrl = null;
+
+  function addFactRow() {
+    if (factsList.querySelectorAll('.fact-row').length >= MAX_FACTS) return;
+    const row = document.createElement('div');
+    row.className = 'fact-row';
+    row.innerHTML = '<input type="text" class="fact-input" maxlength="140" placeholder="Ещё один факт">' +
+      '<button type="button" title="Удалить">×</button>';
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    factsList.appendChild(row);
+    if (factsList.querySelectorAll('.fact-row').length >= MAX_FACTS) {
+      addFactBtn.style.display = 'none';
+    }
+  }
+
+  addFactBtn.addEventListener('click', addFactRow);
+
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if (!file) { photoDataUrl = null; return; }
+    const reader = new FileReader();
+    reader.onload = (e) => { photoDataUrl = e.target.result; };
+    reader.readAsDataURL(file);
+  });
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function buildCardHtml(data) {
+    const photoBlock = data.photo
+      ? `<img class="card-photo" src="${data.photo}" alt="${escapeHtml(data.name)}">`
+      : `<div class="card-photo-placeholder">🐾</div>`;
+
+    const nicknamesBlock = data.nicknames
+      ? `<p class="card-nicknames">${escapeHtml(data.nicknames)}</p>`
+      : '';
+
+    const personalityBlock = data.personality
+      ? `<p class="card-personality">${escapeHtml(data.personality)}</p>`
+      : '';
+
+    const factsBlock = data.facts.length
+      ? `<ul class="card-facts">${data.facts.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul>`
+      : '';
+
+    return `${photoBlock}
+      <div class="card-body">
+        <p class="card-eyebrow">${escapeHtml(data.species)}${data.breed ? ' · ' + escapeHtml(data.breed) : ''}</p>
+        <h2 class="card-name">${escapeHtml(data.name)}</h2>
+        ${nicknamesBlock}
+        ${personalityBlock}
+        ${factsBlock}
+      </div>`;
+  }
+
+  function collectData() {
+    const facts = Array.from(document.querySelectorAll('.fact-input'))
+      .map(i => i.value.trim())
+      .filter(Boolean);
+
+    return {
+      name: document.getElementById('pet-name').value.trim(),
+      species: document.getElementById('pet-species').selectedOptions[0].textContent,
+      breed: document.getElementById('pet-breed').value.trim(),
+      nicknames: document.getElementById('pet-nicknames').value.trim(),
+      personality: document.getElementById('pet-personality').value.trim(),
+      facts: facts,
+      photo: photoDataUrl
+    };
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const data = collectData();
+    cardPreview.innerHTML = buildCardHtml(data);
+    formSection.style.display = 'none';
+    resultSection.style.display = 'block';
+  });
+
+  editBtn.addEventListener('click', () => {
+    resultSection.style.display = 'none';
+    formSection.style.display = 'block';
+  });
+
+  downloadBtn.addEventListener('click', () => {
+    const styles = document.querySelector('style').outerHTML;
+    const name = document.getElementById('pet-name').value.trim() || 'Питомец';
+    const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(name)} — карточка питомца</title>
+${styles}
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">${cardPreview.innerHTML}</div>
+  </div>
+</body>
+</html>`;
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name.replace(/[^a-zA-Zа-яА-ЯёЁ0-9]+/g, '_') + '_persona.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+</script>
+</body>
+</html>
