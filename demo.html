@@ -8,6 +8,7 @@
   :root {
     --accent: #c9738a;
     --accent-light: #e3a6b6;
+    --accent-rgb: 201, 115, 138;
     --ink: #2a2632;
     --ink-soft: #55505f;
     --paper: #cfcbcb;
@@ -18,6 +19,7 @@
   :root[data-theme="dark"] {
     --accent: #ff6fa3;
     --accent-light: #ffa0c4;
+    --accent-rgb: 255, 111, 163;
     --ink: #f1ecf5;
     --ink-soft: #b6aec4;
     --paper: #14111c;
@@ -31,34 +33,59 @@
     margin: 0;
     font-family: "Segoe UI", "Trebuchet MS", "Helvetica Neue", Arial, sans-serif;
     background-color: var(--paper);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'><g transform='translate(55,55) rotate(18)' fill='rgba(42,38,50,0.05)'><ellipse cx='0' cy='11' rx='14' ry='11'/><circle cx='-15' cy='-9' r='6.5'/><circle cx='-5' cy='-18' r='6.5'/><circle cx='5' cy='-18' r='6.5'/><circle cx='15' cy='-9' r='6.5'/></g></svg>");
     background-repeat: repeat;
     color: var(--ink);
     min-height: 100vh;
     transition: background-color 0.2s, color 0.2s;
   }
 
-  .theme-toggle {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: var(--card-bg);
-    color: var(--ink);
-    border: 1px solid var(--paper-alt);
+  :root[data-theme="dark"] body {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'><g transform='translate(55,55) rotate(18)' fill='rgba(255,255,255,0.045)'><ellipse cx='0' cy='11' rx='14' ry='11'/><circle cx='-15' cy='-9' r='6.5'/><circle cx='-5' cy='-18' r='6.5'/><circle cx='5' cy='-18' r='6.5'/><circle cx='15' cy='-9' r='6.5'/></g></svg>");
+  }
+
+  .theme-choice-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .theme-choice-btn {
+    position: relative;
+    flex: 1;
+    padding: 10px 14px;
     border-radius: 999px;
-    padding: 8px 16px;
-    font-size: 0.85rem;
+    border: 1px solid var(--ink-soft);
+    background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(0,0,0,0.08)), var(--card-bg);
+    color: var(--ink);
     font-weight: 600;
+    font-size: 0.95rem;
     cursor: pointer;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .theme-choice-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .theme-choice-btn:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .theme-choice-btn.selected {
+    background: linear-gradient(155deg, var(--accent-light), var(--accent));
+    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    border-color: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
   }
 
   :root[data-theme="dark"] input[type="text"],
   :root[data-theme="dark"] select,
   :root[data-theme="dark"] textarea {
-    background: #2c2636;
+    background-color: #3a3248;
     color: var(--ink);
-    border-color: #453d54;
+    border-color: #5a4f6d;
   }
 
   :root[data-theme="dark"] .pattern-swatch {
@@ -102,9 +129,10 @@
   }
 
   .panel {
-    background: var(--paper-alt);
+    background: linear-gradient(160deg, rgba(255,255,255,0.05), rgba(0,0,0,0.06)), var(--paper-alt);
     border-radius: 16px;
     padding: 28px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
   .style-panel { margin-bottom: 20px; }
@@ -112,20 +140,87 @@
   .style-group { margin-bottom: 18px; }
   .style-group:last-child { margin-bottom: 0; }
 
+  .font-hint {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
   .swatch-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    justify-items: center;
     gap: 10px;
-    flex-wrap: wrap;
   }
 
   .swatch, .pattern-swatch {
-    border: 3px solid transparent;
+    position: relative;
+    border: none;
     cursor: pointer;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .swatch:hover, .pattern-swatch:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  .swatch:active, .pattern-swatch:active {
+    transform: translateY(0) scale(0.95);
+  }
+
+  [data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    line-height: 1.3;
+    width: max-content;
+    max-width: 180px;
+    text-align: center;
+    white-space: normal;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+    z-index: 30;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  [data-tooltip]::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--ink);
+    margin-bottom: -2px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease;
+    z-index: 30;
+  }
+
+  [data-tooltip]:hover::after,
+  [data-tooltip]:hover::before,
+  [data-tooltip]:focus-visible::after,
+  [data-tooltip]:focus-visible::before {
+    opacity: 1;
+    visibility: visible;
   }
 
   .swatch {
@@ -140,12 +235,15 @@
     height: 56px;
     border-radius: 12px;
     background-color: #e9e6e6;
-    background-size: 28px 28px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 38px 38px;
     font-size: 1.3rem;
   }
 
   .swatch.selected, .pattern-swatch.selected {
-    border-color: var(--ink);
+    box-shadow: 0 0 0 3px var(--ink), 0 4px 10px rgba(0, 0, 0, 0.35);
+    transform: scale(1.08);
   }
 
   .swatch-auto {
@@ -173,8 +271,26 @@
     border-radius: 8px;
     font-size: 1rem;
     font-family: inherit;
-    background: #fff;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><g transform='translate(20,20) rotate(18)' fill='rgba(42,38,50,0.09)'><ellipse cx='0' cy='5' rx='5' ry='4'/><circle cx='-5.5' cy='-3.5' r='2.3'/><circle cx='-2' cy='-7' r='2.3'/><circle cx='2' cy='-7' r='2.3'/><circle cx='5.5' cy='-3.5' r='2.3'/></g></svg>");
+    background-repeat: repeat;
     color: var(--ink);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+
+  :root[data-theme="dark"] input[type="text"],
+  :root[data-theme="dark"] select,
+  :root[data-theme="dark"] textarea {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><g transform='translate(20,20) rotate(18)' fill='rgba(255,255,255,0.12)'><ellipse cx='0' cy='5' rx='5' ry='4'/><circle cx='-5.5' cy='-3.5' r='2.3'/><circle cx='-2' cy='-7' r='2.3'/><circle cx='2' cy='-7' r='2.3'/><circle cx='5.5' cy='-3.5' r='2.3'/></g></svg>");
+  }
+
+  input[type="text"]:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.12), 0 0 0 3px rgba(255, 111, 163, 0.25);
   }
 
   textarea { resize: vertical; min-height: 60px; }
@@ -222,7 +338,7 @@
   }
 
   button.primary {
-    background: var(--accent);
+    background: linear-gradient(155deg, var(--accent-light), var(--accent));
     color: #fff;
     border: none;
     border-radius: 999px;
@@ -230,16 +346,40 @@
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: 0 6px 16px rgba(var(--accent-rgb), 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  button.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(var(--accent-rgb), 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  button.primary:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 3px 10px rgba(var(--accent-rgb), 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
   button.secondary {
-    background: transparent;
+    background: linear-gradient(155deg, rgba(255,255,255,0.06), rgba(0,0,0,0.08)), var(--card-bg);
     color: var(--ink);
     border: 1px solid var(--ink-soft);
     border-radius: 999px;
     padding: 12px 28px;
     font-size: 1rem;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  button.secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  button.secondary:active {
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   }
 
   #result { display: none; }
@@ -321,8 +461,23 @@
     content: "🐾 ";
   }
 
+  .paw-pop {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.3rem;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    animation: pawPop 0.7s ease-out forwards;
+  }
+
+  @keyframes pawPop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-15deg); }
+    25% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -140%) scale(1.2) rotate(12deg); }
+  }
+
   @media (max-width: 420px) {
-    .wrap { padding: 16px 14px 60px; }
+    .wrap { padding: 52px 14px 60px; }
     .panel { padding: 20px 16px; }
     header.top h1 { font-size: 1.6rem; }
     .card-body { padding: 18px 18px 22px; }
@@ -342,7 +497,6 @@
 </style>
 </head>
 <body>
-  <button type="button" id="theme-toggle" class="theme-toggle">🌙 Тёмная тема</button>
   <div class="wrap">
     <a class="back-link" href="index.html">← на главную</a>
 
@@ -353,29 +507,43 @@
 
     <section id="style-section" class="panel style-panel">
       <div class="style-group">
+        <label>Тема страницы</label>
+        <div class="theme-choice-row" id="theme-choice">
+          <button type="button" class="theme-choice-btn" data-theme-choice="light" data-tooltip="Светлое оформление страницы">☀️ Светлая</button>
+          <button type="button" class="theme-choice-btn selected" data-theme-choice="dark" data-tooltip="Тёмное оформление страницы">🌙 Тёмная</button>
+        </div>
+      </div>
+
+      <div class="style-group">
         <label>Цвет акцента</label>
         <div class="swatch-row" id="color-swatches">
-          <button type="button" class="swatch swatch-auto selected" data-color="auto" title="На вкус самого умного ИИ-агента">✨</button>
-          <button type="button" class="swatch" data-color="rose" style="background:#c9738a" title="Розовый"></button>
-          <button type="button" class="swatch" data-color="teal" style="background:#4a9d95" title="Бирюзовый"></button>
-          <button type="button" class="swatch" data-color="amber" style="background:#d99a3d" title="Янтарный"></button>
-          <button type="button" class="swatch" data-color="indigo" style="background:#6c6bb0" title="Индиго"></button>
-          <button type="button" class="swatch" data-color="forest" style="background:#5f8a5a" title="Зелёный"></button>
-          <button type="button" class="swatch" data-color="graphite" style="background:#5c6470" title="Графит"></button>
-          <button type="button" class="swatch" data-color="navy" style="background:#3d5a73" title="Тёмно-синий"></button>
+          <button type="button" class="swatch swatch-auto selected" data-color="auto" title="На вкус самого умного ИИ-агента" data-tooltip="Подберёт цвет автоматически по виду питомца">✨</button>
+          <button type="button" class="swatch" data-color="rose" style="background:#c9738a" title="Розовый" data-tooltip="Розовый — тёплый и дружелюбный"></button>
+          <button type="button" class="swatch" data-color="teal" style="background:#4a9d95" title="Бирюзовый" data-tooltip="Бирюзовый — свежий и спокойный"></button>
+          <button type="button" class="swatch" data-color="amber" style="background:#d99a3d" title="Янтарный" data-tooltip="Янтарный — яркий и энергичный"></button>
+          <button type="button" class="swatch" data-color="indigo" style="background:#6c6bb0" title="Индиго" data-tooltip="Индиго — насыщенный и стильный"></button>
+          <button type="button" class="swatch" data-color="forest" style="background:#5f8a5a" title="Зелёный" data-tooltip="Зелёный — природный и мягкий"></button>
+          <button type="button" class="swatch" data-color="graphite" style="background:#5c6470" title="Графит" data-tooltip="Графит — сдержанный, минимализм"></button>
+          <button type="button" class="swatch" data-color="navy" style="background:#3d5a73" title="Тёмно-синий" data-tooltip="Тёмно-синий — строгий и элегантный"></button>
+          <button type="button" class="swatch" data-color="coral" style="background:#e0735a" title="Коралловый" data-tooltip="Коралловый — тёплый и живой"></button>
+          <button type="button" class="swatch" data-color="mint" style="background:#5aab86" title="Мятный" data-tooltip="Мятный — свежий и лёгкий"></button>
+          <button type="button" class="swatch" data-color="plum" style="background:#8a5a8c" title="Сливовый" data-tooltip="Сливовый — насыщенный и загадочный"></button>
+          <button type="button" class="swatch" data-color="mustard" style="background:#c9a227" title="Горчичный" data-tooltip="Горчичный — тёплый и солнечный"></button>
         </div>
       </div>
 
       <div class="style-group">
         <label>Фон карточки</label>
         <div class="swatch-row" id="pattern-swatches">
-          <button type="button" class="pattern-swatch pattern-swatch-auto selected" data-pattern="auto" title="На вкус самого умного ИИ-агента">✨</button>
-          <button type="button" class="pattern-swatch" data-pattern="cat" title="Кошачьи лапки"></button>
-          <button type="button" class="pattern-swatch" data-pattern="dog" title="Собачьи лапки"></button>
-          <button type="button" class="pattern-swatch" data-pattern="hearts" title="Сердечки"></button>
-          <button type="button" class="pattern-swatch" data-pattern="stars" title="Звёзды"></button>
-          <button type="button" class="pattern-swatch" data-pattern="bones" title="Косточки"></button>
-          <button type="button" class="pattern-swatch" data-pattern="none" style="background:#fff" title="Без узора"></button>
+          <button type="button" class="pattern-swatch pattern-swatch-auto selected" data-pattern="auto" title="На вкус самого умного ИИ-агента" data-tooltip="Подберёт узор автоматически по виду питомца">✨</button>
+          <button type="button" class="pattern-swatch" data-pattern="cat" title="Кошачьи лапки" data-tooltip="Кошачьи лапки на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="dog" title="Собачьи лапки" data-tooltip="Собачьи лапки на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="hearts" title="Сердечки" data-tooltip="Сердечки на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="stars" title="Звёзды" data-tooltip="Звёзды на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="bones" title="Косточки" data-tooltip="Косточки на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="birds" title="Птичьи следы" data-tooltip="Птичьи следы на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="fish" title="Рыбки" data-tooltip="Рыбки на фоне карточки"></button>
+          <button type="button" class="pattern-swatch" data-pattern="none" style="background:#fff" title="Без узора" data-tooltip="Без узора — чистый однотонный фон"></button>
         </div>
       </div>
 
@@ -389,6 +557,7 @@
           <option value="bold">Строгий гротеск</option>
           <option value="handwritten">Рукописный</option>
         </select>
+        <p class="font-hint" id="font-hint">Подберёт шрифт автоматически по виду питомца</p>
       </div>
     </section>
 
@@ -463,6 +632,20 @@
   const editBtn = document.getElementById('edit-btn');
   const photoInput = document.getElementById('pet-photo');
   const fontSelect = document.getElementById('font-select');
+  const fontHint = document.getElementById('font-hint');
+
+  const FONT_HINTS = {
+    auto: 'Подберёт шрифт автоматически по виду питомца',
+    classic: 'Классика — элегантный шрифт с засечками, подходит всем',
+    playful: 'Игривый — округлый и дружелюбный, для весёлых питомцев',
+    modern: 'Современный — чистый и строгий гротеск',
+    bold: 'Строгий гротеск — крупный и уверенный, привлекает внимание',
+    handwritten: 'Рукописный — тёплый и личный, как открытка от руки'
+  };
+
+  fontSelect.addEventListener('change', () => {
+    fontHint.textContent = FONT_HINTS[fontSelect.value] || '';
+  });
 
   let photoDataUrl = null;
   let selectedColor = 'auto';
@@ -475,7 +658,11 @@
     { key: 'indigo', accent: '#6c6bb0', light: '#9695ce' },
     { key: 'forest', accent: '#5f8a5a', light: '#8bb586' },
     { key: 'graphite', accent: '#5c6470', light: '#8b929c' },
-    { key: 'navy', accent: '#3d5a73', light: '#6d8aa0' }
+    { key: 'navy', accent: '#3d5a73', light: '#6d8aa0' },
+    { key: 'coral', accent: '#e0735a', light: '#ef9c88' },
+    { key: 'mint', accent: '#5aab86', light: '#8cc9ac' },
+    { key: 'plum', accent: '#8a5a8c', light: '#b189b3' },
+    { key: 'mustard', accent: '#c9a227', light: '#e0c165' }
   ];
 
   const THEME_FONTS = [
@@ -545,6 +732,10 @@
       inner = `<g transform='translate(55,55) rotate(10)' fill='${color}'><path d='M0,-20 L5,-5 L20,0 L5,5 L0,20 L-5,5 L-20,0 L-5,-5 Z'/></g>`;
     } else if (shape === 'bones') {
       inner = `<g transform='translate(55,55) rotate(-20)' fill='${color}'><rect x='-20' y='-4' width='40' height='8' rx='4'/><circle cx='-20' cy='-6' r='6'/><circle cx='-20' cy='6' r='6'/><circle cx='20' cy='-6' r='6'/><circle cx='20' cy='6' r='6'/></g>`;
+    } else if (shape === 'birds') {
+      inner = `<g transform='translate(55,55) rotate(8)' fill='${color}'><path d='M0,0 L-4,-20 L4,-20 Z'/><path d='M0,2 L-20,14 L-13,18 Z'/><path d='M0,2 L20,14 L13,18 Z'/></g>`;
+    } else if (shape === 'fish') {
+      inner = `<g transform='translate(55,55) rotate(-10)' fill='${color}'><ellipse cx='-4' cy='0' rx='16' ry='9'/><path d='M12,0 L26,-10 L26,10 Z'/><circle cx='-14' cy='-2' r='1.6' fill='white'/></g>`;
     }
     return `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='110' height='110'>${inner}</svg>")`;
   }
@@ -554,12 +745,14 @@
   }
 
   function renderPatternSwatches() {
-    const swatchColor = isDarkTheme() ? 'rgba(255,255,255,0.5)' : 'rgba(42,38,50,0.45)';
+    const swatchColor = isDarkTheme() ? 'rgba(255,255,255,0.55)' : 'rgba(42,38,50,0.5)';
     document.querySelectorAll('.pattern-swatch[data-pattern]').forEach((btn) => {
       const shape = btn.dataset.pattern;
       if (shape !== 'auto' && shape !== 'none') {
         btn.style.backgroundImage = pawPatternDataUri(shape, swatchColor);
-        btn.style.backgroundRepeat = 'repeat';
+        btn.style.backgroundRepeat = 'no-repeat';
+        btn.style.backgroundPosition = 'center';
+        btn.style.backgroundSize = '38px 38px';
       }
     });
   }
@@ -773,23 +966,38 @@ ${styles}
 
   (function () {
     var root = document.documentElement;
-    var toggleBtn = document.getElementById('theme-toggle');
+    var choiceButtons = document.querySelectorAll('.theme-choice-btn');
     var saved = null;
     try { saved = localStorage.getItem('petpersona-theme'); } catch (e) {}
-    if (saved === 'dark') root.setAttribute('data-theme', 'dark');
+    var mode = saved === 'light' ? 'light' : 'dark';
 
-    function updateLabel() {
-      toggleBtn.textContent = isDarkTheme() ? '☀️ Светлая тема' : '🌙 Тёмная тема';
-    }
-    updateLabel();
-    renderPatternSwatches();
-
-    toggleBtn.addEventListener('click', function () {
-      var wasDark = isDarkTheme();
-      if (wasDark) { root.removeAttribute('data-theme'); } else { root.setAttribute('data-theme', 'dark'); }
-      try { localStorage.setItem('petpersona-theme', wasDark ? 'light' : 'dark'); } catch (e) {}
-      updateLabel();
+    function applyTheme(newMode) {
+      mode = newMode;
+      if (mode === 'dark') { root.setAttribute('data-theme', 'dark'); } else { root.removeAttribute('data-theme'); }
+      try { localStorage.setItem('petpersona-theme', mode); } catch (e) {}
+      choiceButtons.forEach(function (b) { b.classList.toggle('selected', b.dataset.themeChoice === mode); });
       renderPatternSwatches();
+    }
+
+    choiceButtons.forEach(function (b) {
+      b.addEventListener('click', function () { applyTheme(b.dataset.themeChoice); });
+    });
+
+    applyTheme(mode);
+  })();
+
+  (function () {
+    const PAW_EMOJIS = ['🐾'];
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('button, .swatch, .pattern-swatch');
+      if (!target) return;
+      const paw = document.createElement('span');
+      paw.className = 'paw-pop';
+      paw.textContent = PAW_EMOJIS[0];
+      paw.style.left = e.clientX + 'px';
+      paw.style.top = e.clientY + 'px';
+      document.body.appendChild(paw);
+      paw.addEventListener('animationend', () => paw.remove());
     });
   })();
 </script>
